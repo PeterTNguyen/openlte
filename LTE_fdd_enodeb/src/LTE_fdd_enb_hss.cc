@@ -496,12 +496,22 @@ void LTE_fdd_enb_hss::security_resynch(LTE_FDD_ENB_USER_ID_STRUCT *id,
 LTE_FDD_ENB_AUTHENTICATION_VECTOR_STRUCT* LTE_fdd_enb_hss::regenerate_enb_security_data(LTE_FDD_ENB_USER_ID_STRUCT *id,
                                                                                         uint32                      nas_count_ul)
 {
+	LTE_fdd_enb_interface                              *interface = LTE_fdd_enb_interface::get_instance();
     libtools_scoped_lock                                lock(user_sem);
     std::list<LTE_FDD_ENB_HSS_USER_STRUCT *>::iterator  iter;
     LTE_FDD_ENB_AUTHENTICATION_VECTOR_STRUCT           *auth_vec = NULL;
 
     for(iter=user_list.begin(); iter!=user_list.end(); iter++)
     {
+        interface->send_debug_msg(LTE_FDD_ENB_DEBUG_TYPE_INFO,
+                                  LTE_FDD_ENB_DEBUG_LEVEL_USER,
+                                  __FILE__,
+                                  __LINE__,
+                                  "regenerate_enb_security_data debug: HSS IMEI=%llu IMSI=%llu, USER IMEI=%llu IMSI=%llu",
+                                  (*iter)->id.imei,
+                                  (*iter)->id.imsi,
+                                  id->imei,
+                                  id->imsi);
         if(id->imei == (*iter)->id.imei &&
            id->imsi == (*iter)->id.imsi)
         {

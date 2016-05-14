@@ -1,0 +1,71 @@
+*** /dev/null
+--- /dev/null
+***************
+*** 0
+--- 499 -----
++ 	LTE_fdd_enb_interface                              *interface = LTE_fdd_enb_interface::get_instance();
+***************
+*** 0
+--- 506,514 -----
++         interface->send_debug_msg(LTE_FDD_ENB_DEBUG_TYPE_INFO,
++                                   LTE_FDD_ENB_DEBUG_LEVEL_USER,
++                                   __FILE__,
++                                   __LINE__,
++                                   "regenerate_enb_security_data debug: HSS IMEI=%llu IMSI=%llu, USER IMEI=%llu IMSI=%llu",
++                                   (*iter)->id.imei,
++                                   (*iter)->id.imsi,
++                                   id->imei,
++                                   id->imsi);
+*** /dev/null
+--- /dev/null
+***************
+*** 0
+--- 1044,1045 -----
++             if(NULL != hss_auth_vec)
++             {
+***************
+*** 0
+--- 1052 -----
++         }
+***************
+*** 0
+--- 1055 -----
++         if(NULL != hss_auth_vec)
+***************
+*** 0
+--- 1057,1062 -----
++         else
++         {
++         	send_service_reject(user, rb, LIBLTE_MME_EMM_CAUSE_IMPLICITLY_DETACHED);
++         	rb->set_mme_state(LTE_FDD_ENB_MME_STATE_RELEASE);
++         }
++ 
+***************
+*** 0
+--- 1746 -----
++     uint8 key_256[16];
+***************
+*** 1742
+-                                        NULL,
+--- 1753 -----
++                                        &key_256[0],
+*** /dev/null
+--- /dev/null
+***************
+*** 0
+--- 183,191 -----
++                 //Set RX to RF B
++                 uhd::usrp::subdev_spec_t subdev_spec;
++                 subdev_spec = usrp->get_rx_subdev_spec();
++                 std::cout << subdev_spec.to_pp_string();
++ 
++                 usrp->set_rx_subdev_spec(std::string("A:B A:A"), 0);
++ 
++                 subdev_spec = usrp->get_rx_subdev_spec();
++                 std::cout << subdev_spec.to_pp_string();
+*** /dev/null
+--- /dev/null
+***************
+*** 0
+--- 515 -----
++     case LTE_FDD_ENB_RRC_PROC_RRC_CON_REEST_REQ:

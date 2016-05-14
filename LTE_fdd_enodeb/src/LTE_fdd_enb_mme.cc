@@ -1041,15 +1041,25 @@ void LTE_fdd_enb_mme::parse_service_request(LIBLTE_BYTE_MSG_STRUCT *msg,
             // Resolve sequence number mismatch
             auth_vec->nas_count_ul = service_req.ksi_and_seq_num.seq_num;
             hss_auth_vec           = hss->regenerate_enb_security_data(user->get_id(), auth_vec->nas_count_ul);
+            if(NULL != hss_auth_vec)
+            {
             for(i=0; i<32; i++)
             {
                 auth_vec->k_rrc_enc[i] = hss_auth_vec->k_rrc_enc[i];
                 auth_vec->k_rrc_int[i] = hss_auth_vec->k_rrc_int[i];
             }
         }
+        }
 
         // Set the state
+        if(NULL != hss_auth_vec)
         rb->set_mme_state(LTE_FDD_ENB_MME_STATE_RRC_SECURITY);
+        else
+        {
+        	send_service_reject(user, rb, LIBLTE_MME_EMM_CAUSE_IMPLICITLY_DETACHED);
+        	rb->set_mme_state(LTE_FDD_ENB_MME_STATE_RELEASE);
+        }
+
     }
 }
 void LTE_fdd_enb_mme::parse_activate_default_eps_bearer_context_accept(LIBLTE_BYTE_MSG_STRUCT *msg,
@@ -1733,13 +1743,14 @@ void LTE_fdd_enb_mme::send_service_reject(LTE_fdd_enb_user *user,
     LTE_FDD_ENB_RRC_NAS_MSG_READY_MSG_STRUCT nas_msg_ready;
     LIBLTE_MME_SERVICE_REJECT_MSG_STRUCT     service_rej;
     LIBLTE_BYTE_MSG_STRUCT                   msg;
+    uint8 key_256[16];
 
     service_rej.emm_cause     = cause;
     service_rej.t3442_present = false;
     service_rej.t3446_present = false;
     liblte_mme_pack_service_reject_msg(&service_rej,
                                        LIBLTE_MME_SECURITY_HDR_TYPE_PLAIN_NAS,
-                                       NULL,
+                                       &key_256[0],
                                        0,
                                        0,
                                        &msg);

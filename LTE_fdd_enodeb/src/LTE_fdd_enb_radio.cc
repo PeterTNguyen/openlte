@@ -180,6 +180,15 @@ LTE_FDD_ENB_ERROR_ENUM LTE_fdd_enb_radio::start(void)
                     master_clock_set                                = true;
                 }
                 usrp = uhd::usrp::multi_usrp::make(devs[selected_radio_idx-1]);
+                //Set RX to RF B
+                uhd::usrp::subdev_spec_t subdev_spec;
+                subdev_spec = usrp->get_rx_subdev_spec();
+                std::cout << subdev_spec.to_pp_string();
+
+                usrp->set_rx_subdev_spec(std::string("A:B A:A"), 0);
+
+                subdev_spec = usrp->get_rx_subdev_spec();
+                std::cout << subdev_spec.to_pp_string();
                 usrp->set_clock_source(clock_source);
                 if(!master_clock_set)
                 {

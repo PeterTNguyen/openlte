@@ -512,6 +512,7 @@ void LTE_fdd_enb_rrc::dcch_sm(LIBLTE_BIT_MSG_STRUCT *msg,
 {
     switch(rb->get_rrc_procedure())
     {
+    case LTE_FDD_ENB_RRC_PROC_RRC_CON_REEST_REQ:
     case LTE_FDD_ENB_RRC_PROC_RRC_CON_REQ:
         switch(rb->get_rrc_state())
         {
